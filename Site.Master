@@ -1,0 +1,149 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="LibrarySystem.SiteMaster" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - Library System</title>
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS (includes Popper.js) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+  <style>
+    .custom-dropdown {
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        display: none; /* Hidden by default */
+        position: absolute;
+        z-index: 1050; /* Ensure it shows above other content */
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        min-width: 160px;
+        padding: 0;
+        list-style: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-dropdown.show {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+<body>
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" runat="server" href="~/">Library System</a>
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
+                        <li class="nav-item" id="bookListPublisher"  runat="server"><a class="nav-link" runat="server" href="~/BookListPublisher">Book List</a></li>
+                        <li class="nav-item" id="bookList"  runat="server"><a class="nav-link" runat="server" href="~/BookListAdmin">Book List</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Search">Search for a book</a></li>
+                        <li id="contact" class="nav-item"  runat="server"><a class="nav-link" runat="server" href="~/Contact">Contact</a></li>
+                        <li class="nav-item" id="usersList"  runat="server"><a class="nav-link" runat="server" href="~/UsersList">User List</a></li>
+                        <li class="nav-item" id="PublisherList"  runat="server"><a class="nav-link" runat="server" href="~/UserTransactions">My Transaction</a></li>
+                        <li class="nav-item" id="contacts"  runat="server"><a class="nav-link" runat="server" href="~/AdminContacts">Contacts</a></li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li id="loginNavItem" runat="server" class="nav-item">
+                            <a id="loginLink" runat="server" class="nav-link" href="~/Login.aspx">Login</a>
+                        </li>
+                        <li id="registerNavItem" runat="server" class="nav-item">
+                            <a id="registerLink" runat="server" class="nav-link" href="~/Register.aspx">Register</a>
+                        </li>
+                        <li id="userDropdownNavItem" runat="server" class="nav-item dropdown" visible="false">
+                            <!-- Dropdown Trigger -->
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <!-- User Image -->
+                                <asp:Image ID="imgUser" runat="server" CssClass="rounded-circle me-2" Width="40" Height="40" />
+                                <!-- Welcome Text -->
+                            </a>
+
+                            <!-- Dropdown Menu -->
+                            <ul class=" custom-dropdown" aria-labelledby="userDropdown">
+                                <li>
+                                    <span class="dropdown-item-text fw-bold" id="dropdownUserName" runat="server">Welcome, User</span>
+                                </li>
+                                <li><a class="dropdown-item" id="profileLink" runat="server" href="~/UpdateProfile.aspx">Profile</a></li>
+                                <li><a class="dropdown-item" id="logoutLink" runat="server" href="~/Logout.aspx">Logout</a></li>
+                            </ul>
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container body-content w-100">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server" >
+            </asp:ContentPlaceHolder>
+            <hr />
+            
+        </div>
+     
+    </form>
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/Scripts/bootstrap.js") %>
+    </asp:PlaceHolder>
+<script>
+    // Get the dropdown trigger and menu
+    const dropdownTrigger = document.getElementById('userDropdown');
+    const dropdownMenu = document.querySelector('.custom-dropdown');
+
+    if (dropdownTrigger && dropdownMenu) {
+        // Toggle dropdown visibility on click
+        dropdownTrigger.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent default anchor behavior
+            dropdownMenu.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    }
+</script>
+</body>
+</html>
